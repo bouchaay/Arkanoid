@@ -1,6 +1,6 @@
 open Graphics
 
-state = Normal | Invincible
+type state = Normal | Invincible
 module type Paddle =
 sig
   type position (* Coin inférieur gauche *)
@@ -49,10 +49,10 @@ struct
   let get_state (_, _, _, state) = state
 
   (* Setters *)
-  let set_position (position, size, color, state) new_position = (new_position, size, color, state)
-  let set_size (position, size, color, state) new_size = (position, new_size, color, state)
-  let set_paddle_color (position, size, color, state) new_color = (position, size, new_color, state)
-  let set_state (position, size, color, state) new_state = (position, size, color, new_state)
+  let set_position (_, size, color, state) new_position = (new_position, size, color, state)
+  let set_size (position, _, color, state) new_size = (position, new_size, color, state)
+  let set_paddle_color (position, size, _, state) new_color = (position, size, new_color, state)
+  let set_state (position, size, color, _) new_state = (position, size, color, new_state)
 
   (* Retourner l'etat de la paddle *)
   let is_normal (_, _, _, state) = state = Normal

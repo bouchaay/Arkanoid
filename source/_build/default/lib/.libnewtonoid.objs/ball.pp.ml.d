@@ -1,1 +1,1 @@
-lib/ball.pp.ml:
+lib/ball.pp.ml: Graphics Ppx_inline_test_lib
