@@ -23,15 +23,27 @@ let graphic_format =
     (int_of_float ((2. *. Box.marge) +. Box.supx -. Box.infx))
     (int_of_float ((2. *. Box.marge) +. Box.supy -. Box.infy))
 
-let draw_state etat = failwith "A DEFINIR"
+type game_state = {
+      paddle_position : float * float;
+      paddle_size : float * float;
+      paddle_color : Graphics.color;
+      (* Autres champs de l'état *)
+    }
+
+let draw_state (state : game_state) =
+  let (x, y) = state.paddle_position in
+  let (width, height) = state.paddle_size in
+  let color = state.paddle_color in
+  Paddle.draw (x, y) (width, height) color
+
 
 (* extrait le score courant d'un etat : *)
-let score etat : int = failwith "A DEFINIR"
+(*let score etat : int = failwith "A DEFINIR"*)
 
 let draw flux_etat =
-  let rec loop flux_etat last_score =
-    match Flux.(uncons flux_etat) with
-    | None -> last_score
+  let rec loop flux_etat =
+    match Flux.uncons flux_etat with
+    | None -> ()
     | Some (etat, flux_etat') ->
       Graphics.clear_graph ();
       (* DESSIN ETAT *)
@@ -39,13 +51,20 @@ let draw flux_etat =
       (* FIN DESSIN ETAT *)
       Graphics.synchronize ();
       Unix.sleepf Init.dt;
-      loop flux_etat' (last_score + score etat)
-    | _ -> assert false
+      loop flux_etat'
   in
   Graphics.open_graph graphic_format;
   Graphics.auto_synchronize false;
-  let score = loop flux_etat 0 in
-  Format.printf "Score final : %d@\n" score;
+  
+  loop flux_etat;
   Graphics.close_graph ()
 
-let () = game_hello ()
+let initial_state : game_state =
+    {
+      paddle_position = (100., 100.);  (* Position initiale de la raquette *)
+      paddle_size = (50., 10.);        (* Taille initiale de la raquette *)
+      paddle_color = Graphics.blue;    (* Couleur initiale de la raquette *)
+  
+    }
+  
+  let () = draw (Flux.constant initial_state)

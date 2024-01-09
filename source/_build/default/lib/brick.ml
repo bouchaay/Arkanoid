@@ -9,8 +9,7 @@ type state = Normal | Touched | Destroyed
 (* Interface du module Brick *)
 module type Brick =
 sig
-  type position (* Coin inférieur gauche *)
-  type size (* Taille de la brique *)
+  type t
   type power (* Puissance de la brique *)
   type color (* Couleur de la brique *)
   type brick (* Type de la brique *)
@@ -63,11 +62,10 @@ end
 (* Module Brick *)
 module Brick : Brick =
 struct
-  type position = float * float
-  type size = float * float
+  type t = float
   type power = int
   type color = Graphics.color
-  type brick = position * size * power * color * state
+  type brick = (t*t) * t * power * color * state
 
   (* Getters *)
   let create position size power color = (position, size, power, color, Normal)

@@ -1,0 +1,5 @@
+# C:\OCaml65\home\elgue\.opam\4.14.0+mingw64c\bin\dune.exe init project ark
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Workspace root: "C:\\OCaml65\\home\\elgue\\Arkanoid"
+# Auto-detected concurrency: 8

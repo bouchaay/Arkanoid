@@ -62,9 +62,10 @@ end
 (* Module Brick *)
 module Brick : Brick =
 struct
+  type t = float
   type power = int
   type color = Graphics.color
-  type brick = position * size * power * color * state
+  type brick = (t*t) * t * power * color * state
 
   (* Getters *)
   let create position size power color = (position, size, power, color, Normal)

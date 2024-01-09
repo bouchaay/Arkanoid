@@ -1,0 +1,4 @@
+(executable
+ (public_name ark)
+ (name main)
+ (libraries ark))

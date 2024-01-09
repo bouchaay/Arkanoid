@@ -1,1 +1,2 @@
-let game_hello () = print_endline "Hello, Newtonoiders!"
+let hello_world = "Hello, world!";
+
