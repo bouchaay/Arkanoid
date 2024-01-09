@@ -3,25 +3,33 @@ open Graphics
 type state = Normal | Invincible
 module type Paddle =
 sig
-  type position (* Coin inférieur gauche *)
-  type size (* Taille du paddle *)
+  type t (* Type float *)
   type color (* Couleur du paddle *)
   type paddle (* Type du paddle *)
 
-  (* Crée un paddle *)
-  val create : position -> size -> color -> state -> paddle
+  (* Crée un paddle depuis une position, une taille, une couleur et un état *)
+  val create : (t * t) -> (t * t) -> color -> state -> paddle
   (* Renvoie la position du paddle *)
-  val get_position : paddle -> position
+  val get_position : paddle -> (t * t)
   (* Renvoie la taille du paddle *)
-  val get_size : paddle -> size
+  val get_size : paddle -> (t * t)
   (* Renvoie la couleur du paddle *)
   val get_color : paddle -> color
   (* Dessine le paddle *)
   val get_state : paddle -> state
+  (* Retourner la valeur de x de la paddle *)
+  val get_x : paddle -> t
+  (* Retourner la valeur de y de la paddle *)
+  val get_y : paddle -> t
+  (* Retourner la valeur de width de la paddle *)
+  val get_width : paddle -> t
+  (* Retourner la valeur de height de la paddle *)
+  val get_height : paddle -> t
   (* Change la position du paddle *)
-  val set_position : paddle -> position -> paddle
+  val set_position : paddle -> (t * t) -> paddle
+
   (* Change la taille du paddle *)
-  val set_size : paddle -> size -> paddle
+  val set_size : paddle -> (t * t) -> paddle
   (* Change la couleur du paddle *)
   val set_paddle_color : paddle -> color -> paddle
   (* Change l'état du paddle *)
@@ -31,15 +39,14 @@ sig
   (* Renvoie si la paddle est invincible *)
   val is_invincible : paddle -> bool
   (* Dessine le paddle *)
-  val draw : position -> position -> color -> unit
+  val draw : (t * t) -> (t * t) -> color -> unit
 end
 
-module Paddle : Paddle =
+module Paddle : Paddle with type t = float =
 struct
-  type position = float * float
-  type size = float * float
+  type t = float
   type color = Graphics.color
-  type paddle = position * size * color * state
+  type paddle = (t * t) * (t * t) * color * state
 
   (* Getters *)
   let create pos size color state = (pos, size, color, state)
@@ -47,6 +54,10 @@ struct
   let get_size (_, size, _, _) = size
   let get_color (_, _, color, _) = color
   let get_state (_, _, _, state) = state
+  let get_x (pos , _, _, _) = fst pos
+  let get_y (pos, _, _, _) = snd pos
+  let get_width (_, size, _, _) = fst size
+  let get_height (_, size, _, _) = snd size
 
   (* Setters *)
   let set_position (_, size, color, state) new_position = (new_position, size, color, state)

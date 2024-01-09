@@ -21,20 +21,20 @@ module Collision : Collision = struct
 
   let ball_paddle_collision ball paddle =
     let ball_r = Ball.get_radius ball in
-    let ball_x = (fst (Ball.get_position ball)) in (* x du centre de la balle *)
-    let ball_y = (snd (Ball.get_position ball)) in (* y du centre de la balle *)
-    let paddle_x = (fst (Paddle.get_position paddle)) in (* x du coin inférieur gauche *)
-    let paddle_y = (snd (Paddle.get_position paddle)) in (* y du coin inférieur gauche *)
-    let paddle_width = fst (Paddle.get_size paddle) in
-    let paddle_height = snd (Paddle.get_size paddle) in
+    let ball_x = Ball.get_x ball in (* x du centre de la balle *)
+    let ball_y = Ball.get_y ball in (* y du centre de la balle *)
+    let paddle_x = Paddle.get_x paddle in (* x du coin inférieur gauche *)
+    let paddle_y = Paddle.get_y paddle in (* y du coin inférieur gauche *)
+    let paddle_width = Paddle.get_width paddle in
+    let paddle_height = Paddle.get_height paddle in
     let paddle_left = paddle_x in
-    let paddle_right = paddle_x + paddle_width in
+    let paddle_right = paddle_x +. paddle_width in
     let paddle_top = paddle_y in
-    let paddle_bottom = paddle_y + paddle_height in
-    let ball_left = ball_x - ball_r in
-    let ball_right = ball_x + ball_r in
-    let ball_top = ball_y - ball_r in
-    let ball_bottom = ball_y + ball_r in
+    let paddle_bottom = paddle_y +. paddle_height in
+    let ball_left = ball_x -. ball_r in
+    let ball_right = ball_x +. ball_r in
+    let ball_top = ball_y -. ball_r in
+    let ball_bottom = ball_y +. ball_r in
     let paddle_left_collision = ball_right >= paddle_left in
     let paddle_right_collision = ball_left <= paddle_right in
     let paddle_top_collision = ball_bottom >= paddle_top in
@@ -62,5 +62,9 @@ module Collision : Collision = struct
     let brick_top_collision = ball_bottom >= brick_top in
     let brick_bottom_collision = ball_top <= brick_bottom in
     brick_left_collision && brick_right_collision && brick_top_collision && brick_bottom_collision
+
+  let ball_wall_collision ball = failwith "not implemented"
+
+  end
 
 

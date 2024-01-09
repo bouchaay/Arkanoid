@@ -4,45 +4,46 @@ open Graphics
 type state = Normal | Lost
 
 module type Ball = sig
-  type position (* Position du centre de la balle *)
-  type radius (* Rayon de la balle *)
+  type t
   type color (* Couleur de la balle *)
-  type speed (* Vitesse de la balle *)
   type ball (* Type de la balle *)
 
-  (* Renvoie un ball *)
-  val create : position -> radius -> color -> state -> speed -> ball
+  (* Crée une balle depuis une position, un rayon, une couleur, un état et une vitesse *)
+  val create : (t * t) -> t -> color -> state -> t -> ball
   (* Renvoie la position de la balle *)
-  val get_position : ball -> position
+  val get_position : ball -> (t * t)
   (* Renvoie la taille de la balle *)
-  val get_radius : ball -> radius
+  val get_radius : ball -> t
   (* Renvoie la couleur de la balle *)
   val get_color : ball -> color
   (* Renvoie l'état de la balle *)
   val get_state : ball -> state
   (* Renvoie la vitesse de la balle *)
-  val get_speed : ball -> speed
+  val get_speed : ball -> t
+  (* Retourner la ppostion x de la balle *)
+  val get_x : ball -> t
+  (* Retourner la ppostion y de la balle *)
+  val get_y : ball -> t
   (* Renvoie la balle après le changement de position *)
-  val set_position : ball -> position -> ball
+  val set_position : ball -> (t * t) -> ball
   (* Renvoie la balle après le changement de taille *)
-  val set_radius : ball -> radius -> ball
+  val set_radius : ball -> t -> ball
   (* Renvoie la balle après le changement de couleur *)
   val set_ball_color : ball -> color -> ball
   (* Renvoie la balle après le changement d'état *)
   val set_state : ball -> state -> ball
   (* Renvoie la balle après le changement de vitesse *)
-  val set_speed : ball -> speed -> ball
+  val set_speed : ball -> t -> ball
   (* Dessine la balle *)
   val draw : ball -> unit
 end 
 
 
-module Ball : Ball = struct
-  type position = float * float
-  type radius = float
+(* Avec type radius = float *)
+module Ball : Ball with type t = float = struct
+  type t = float
   type color = Graphics.color
-  type speed = float * float
-  type ball = position * radius * color * state * speed
+  type ball = (t * t) * t * color * state * t
   
   let create position radius color state speed = (position, radius, color, state, speed)
   
@@ -51,6 +52,8 @@ module Ball : Ball = struct
   let get_color (_,_,color,_,_) = color
   let get_state (_,_,_,state,_) = state
   let get_speed  (_,_,_,_,speed) = speed
+  let get_x ball = fst (get_position ball)
+  let get_y ball = snd (get_position ball)
   
   let set_position (_, radius, color, state, speed) newPosition = (newPosition, radius, color, state, speed)
   let set_radius (position, _, color, state, speed) newradius = (position, newradius, color, state, speed)

@@ -9,28 +9,27 @@ type state = Normal | Touched | Destroyed
 (* Interface du module Brick *)
 module type Brick =
 sig
-  type position (* Coin inférieur gauche *)
-  type size (* Taille de la brique *)
+  type t
   type power (* Puissance de la brique *)
   type color (* Couleur de la brique *)
   type brick (* Type de la brique *)
 
-  (* Crée une brique *)
-  val create : position -> size -> power -> color -> brick
+  (* Crée une brique d'après sa position, sa taille, sa puissance et sa couleur *)
+  val create : (t * t) -> (t * t) -> int -> color -> brick
   (* Renvoie la position de la brique *)
-  val get_position : brick -> position
+  val get_position : brick -> (t * t)
   (* Renvoie la taille de la brique *)
-  val get_size : brick -> size
+  val get_size : brick -> (t * t)
   (* Renvoie la puissance de la brique *)
-  val get_power : brick -> power
+  val get_power : brick -> t
   (* Renvoie la couleur de la brique *)
   val get_brick_color : brick -> color
   (* Renvoie l'état de la brique *)
   val get_state : brick -> state
   (* Modifie l'état de la brique *)
-  val set_position : brick -> position -> brick
+  val set_position : brick -> (t * t) -> brick
   (* Modifie la taille de la brique *)
-  val set_size : brick -> size -> brick
+  val set_size : brick -> (t * t) -> brick
   (* Modifie la puissance de la brique *)
   val set_power : brick -> power -> brick
   (* Modifie la couleur de la brique *)
@@ -38,7 +37,7 @@ sig
   (* Modifie l'état de la brique *)
   val set_state : brick -> state -> brick
   (* Renvoie la brique après un coup de balle *)
-  val set_brick : brick -> position -> color -> state -> brick
+  val set_brick : brick -> (t * t) -> color -> state -> brick
   (* Renvoie si la brique est détruite *)
   val is_destroyed : brick -> bool
   (* Renvoie si la brique est touchée *)
@@ -46,9 +45,9 @@ sig
   (* Renvoie si la brique est normale *)
   val is_normal : brick -> bool
   (* Générer une ligne de briques *)
-  val generate_brick_line : position -> position -> float -> int -> brick list
+  val generate_brick_line : (t * t) -> (t * t) -> float -> int -> brick list
   (* Générer des lignes de briques *)
-  val generate_brick_lines : position -> position -> int -> int -> brick list list
+  val generate_brick_lines : (t * t) -> (t * t) -> int -> int -> brick list list
   (* Dessiner une brique *)
   (* Dessiner une brique *)
   val draw_brick : brick -> unit
@@ -63,8 +62,6 @@ end
 (* Module Brick *)
 module Brick : Brick =
 struct
-  type position = float * float
-  type size = float * float
   type power = int
   type color = Graphics.color
   type brick = position * size * power * color * state
@@ -78,12 +75,12 @@ struct
   let get_state (_, _, _, _, state) = state
 
   (* Setters *)
-  let set_position (position, size, power, color, state) new_position = (new_position, size, power, color, state)
-  let set_size (position, size, power, color, state) new_size = (position, new_size, power, color, state)
-  let set_power (position, size, power, color, state) new_power = (position, size, new_power, color, state)
-  let set_brick_color (position, size, power, color, state) new_color = (position, size, power, new_color, state)
-  let set_state (position, size, power, color, state) new_state = (position, size, power, color, new_state)
-  let set_brick (position, size, power, color, state) new_position new_color new_state = (new_position, size, power, new_color, new_state)
+  let set_position (_, size, power, color, state) new_position = (new_position, size, power, color, state)
+  let set_size (position, _, power, color, state) new_size = (position, new_size, power, color, state)
+  let set_power (position, size, _, color, state) new_power = (position, size, new_power, color, state)
+  let set_brick_color (position, size, power, _, state) new_color = (position, size, power, new_color, state)
+  let set_state (position, size, power, color, _) new_state = (position, size, power, color, new_state)
+  let set_brick (_, size, power, _, _) new_position new_color new_state = (new_position, size, power, new_color, new_state)
 
   (* Retourner L'etat de la brique *)
   let is_destroyed (_, _, _, _, state) = state = Destroyed
