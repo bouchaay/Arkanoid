@@ -30,11 +30,18 @@ type game_state = {
       (* Autres champs de l'état *)
     }
 
-let draw_state (state : game_state) =
-  let (x, y) = state.paddle_position in
-  let (width, height) = state.paddle_size in
-  let color = state.paddle_color in
-  Paddle.draw (x, y) (width, height) color
+  let draw_state (state : game_state) =
+      let bricks, padle, ball = state.bricks in
+      let get_click_position () =
+      let event = wait_next_event [Button_down] in
+        (event.button,(float_of_int event.mouse_x, float_of_int event.mouse_y)) in
+        
+      let _, posM = get_click_position () in
+      let new_brick = Brick.update_brick_lines posM bricks in
+      Brick.draw_brick_lines new_brick;
+      Paddle.draw padle;
+      Ball.draw ball
+    
 
 
 (* extrait le score courant d'un etat : *)
@@ -59,12 +66,22 @@ let draw flux_etat =
   loop flux_etat;
   Graphics.close_graph ()
 
-let initial_state : game_state =
-    {
-      paddle_position = (100., 100.);  (* Position initiale de la raquette *)
-      paddle_size = (50., 10.);        (* Taille initiale de la raquette *)
-      paddle_color = Graphics.blue;    (* Couleur initiale de la raquette *)
+  let () =
+    let posd = (50., 300.) in
+    let posM = (Box.supx , Box.supy ) in
+   
+    
+    let coleR = Graphics.blue in
+    let coloRpadle = Graphics.black in
+    let coloRball = Graphics.red in
+    let paddleInit = Paddle.create (300.,60.) (90.,20.) coloRpadle in
+    let ballInit = Ball.create (300.,150.) 10. coloRball Normal 4. in
+    
+    let initial_state : game_state = { bricks = (Brick.generate_brick_lines posd posM coleR, paddleInit, ballInit) } in
   
-    }
+    let flux_etat = Flux.constant initial_state in
+    Graphics.open_graph graphic_format;
+    Graphics.auto_synchronize false;
+    loop flux_etat;
+    Graphics.close_graph ()
   
-  let () = draw (Flux.constant initial_state)

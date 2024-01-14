@@ -39,7 +39,7 @@ sig
   (* Renvoie si la paddle est invincible *)
   val is_invincible : paddle -> bool*)
   (* Dessine le paddle *)
-  val draw : (t * t) -> (t * t) -> color -> unit
+  val draw : paddle -> unit
 end
 
 module Paddle : Paddle with type t = float =
@@ -70,9 +70,7 @@ struct
   let is_invincible (_, _, _, state) = state = Invincible*)
 
   (* Dessine le paddle *)
-  let draw (x, y) (width, height) color =
+  let draw ((x, y),(width, height), color) =
     set_color color;
     fill_rect (int_of_float x) (int_of_float y) (int_of_float width) (int_of_float height)
-
-  
 end

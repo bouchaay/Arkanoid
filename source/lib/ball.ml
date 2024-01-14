@@ -5,7 +5,7 @@ type state = Normal | Lost
 
 module type Ball = sig
   type t
-  type color (* Couleur de la balle *)
+  type color = Graphics.color (* Couleur de la balle *)
   type ball (* Type de la balle *)
 
   (* Crée une balle depuis une position, un rayon, une couleur, un état et une vitesse *)
@@ -40,7 +40,7 @@ end
 
 
 (* Avec type radius = float *)
-module Ball : Ball with type t = float = struct
+module Ball : Ball with type t = float  = struct
   type t = float
   type color = Graphics.color
   type ball = (t * t) * t * color * state * t
@@ -62,11 +62,9 @@ module Ball : Ball with type t = float = struct
   let set_speed (position, radius, color, state, _) newSpeed = (position, radius, color, state, newSpeed)
   
   
-  let draw ball =(
-    let (x, y) = get_position ball in
-    let r = get_radius ball in
-    let color = get_color ball in
-    set_color color;
+  let draw ((x,y), r, coloRb, _,_) =(
+    
+    set_color coloRb;
     fill_circle (int_of_float x) (int_of_float y) (int_of_float r) )
 end
 
