@@ -3,7 +3,7 @@ open Graphics
 
 module type Brick =
 sig
-  type t = float
+  type t
   type power
   type color = Graphics.color
   type brick
@@ -46,8 +46,7 @@ sig
   val update_bricks : (t * t) -> brick list list -> brick list list
 end
 
-module Brick : Brick =
-struct
+module Brick : Brick with type t = float = struct
   type t = float
   type power = int
   type color = Graphics.color

@@ -87,8 +87,12 @@ let rec loop game flux_etat =
         loop newGameVie flux_etat'
       else
         begin
+          Graphics.clear_graph ();
+          let newGameEnd = {newGame with vie = vieRestante} in
+          draw_state newGameEnd;
           Graphics.moveto 350 300;
           Graphics.draw_string "Game Over";
+          Graphics.moveto 650 20;
           Graphics.synchronize ();
           Unix.sleepf 3.;
           Graphics.close_graph ()

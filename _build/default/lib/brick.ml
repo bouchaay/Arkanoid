@@ -3,7 +3,7 @@ open Graphics
 
 module type Brick =
 sig
-  type t = float
+  type t
   type power
   type color = Graphics.color
   type brick
@@ -46,8 +46,7 @@ sig
   val update_bricks : (t * t) -> brick list list -> brick list list
 end
 
-module Brick : Brick =
-struct
+module Brick : Brick with type t = float = struct
   type t = float
   type power = int
   type color = Graphics.color
@@ -72,12 +71,12 @@ struct
     let width = 25.  in
     let height = 10. in
     
-  let rec aux position  =
-    if  (fst position) +. width >= xmax -. 40. then []
-    else
-      let brick = create position (width, height) (Random.int 3 + 1) color in
-      brick :: aux (fst position +.  space, snd position) 
-    in
+    let rec aux position  =
+      if  (fst position) +. width >= xmax -. 40. then []
+      else
+        let brick = create position (width, height) (Random.int 3 + 1) color in
+        brick :: aux (fst position +.  space, snd position) 
+      in
     aux position_depart 
 
   let generate_brick_lines position_depart posMax color =

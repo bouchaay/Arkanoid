@@ -17,8 +17,6 @@ sig
   val get_size : paddle -> (t * t)
   (* Renvoie la couleur du paddle *)
   val get_color : paddle -> color
-  (* Dessine le paddle *)
-  (*val get_state : paddle -> state*)
   (* Retourner la valeur de x de la paddle *)
   val get_x : paddle -> t
   (* Retourner la valeur de y de la paddle *)

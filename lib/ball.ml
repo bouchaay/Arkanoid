@@ -99,7 +99,7 @@ module Ball : Ball with type t = float  = struct
     -.vx
   else
     vx in
-    let ny = if (y <= (yp +. height) && x <= (xp +. width) && x >= xp)  || y >= float_of_int (size_y () ) then -. vy else vy in
+    let ny = if (y <= (yp +. height +. radius) && x <= (xp +. width) && x >= xp)  || y >= float_of_int (size_y () ) then -. vy else vy in
     let newSpeed = (nx,ny) in
     (position, radius, color, state, newSpeed)
 
@@ -143,9 +143,9 @@ module Ball : Ball with type t = float  = struct
       else
         isTouchingBricks (position, radius, color, state, speed) q
 
-  let isTouchedpaddl (position, _, _, _, _) (xp,yp) (width, height) =
+  let isTouchedpaddl (position, radius, _, _, _) (xp,yp) (width, height) =
     let (x,y) = position in
-    if (y <= yp +. height +. 10.) && (x >= 0.) then
+    if (y <= yp +. height +. radius) && (x >= 0.) then
       if x <= (xp +. width) && x >= xp then
         true
       else
